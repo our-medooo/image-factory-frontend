@@ -13,6 +13,9 @@ const portfinder = require('portfinder')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
+let appData = require('../data.json')
+let data = appData.people
+
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -22,6 +25,14 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
+    before(app) {
+      app.get('/api/people', (req, res) => {
+        res.json({
+          code: 0,
+          data: data
+        });
+      });
+    },
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
